@@ -6,7 +6,10 @@
     <title>Stay-ease</title>
 </head>
 <body>
-    <h1>All Listing</h1>
+    <h3>All Listing</h3>
+    <form method="GET" action="/listings/new">
+        <button>Create New Listing</button>
+    </form>
     <ul>
      <%for(let listing of  allListing ){%>
         <li><a href="/listings/<%=listing._id%>"><%=listing.title%></a></li>
