@@ -11,6 +11,7 @@ const ejsMate = require("ejs-mate");
 const wrapAsync = require("./utils/wrapAsync.js");
 const ExpressError = require("./utils/ExpressError.js");
 const { listingSchema } = require("./schema.js");
+const Review = require("./models/review.js");
 
 require("events").defaultMaxListeners = 50;
 
@@ -43,12 +44,12 @@ app.get(
 );
 //middleware for validate schema
 const validateListing = (req, res, next) => {
-  let {error} = listingSchema.validate(req.body);
-  
+  let { error } = listingSchema.validate(req.body);
+
   if (error) {
-    let errMsg=error.details.map((el)=>el.message).join(",");
+    let errMsg = error.details.map((el) => el.message).join(",");
     throw new ExpressError(400, errMsg);
-  }else{
+  } else {
     next();
   }
 };
@@ -70,7 +71,8 @@ app.get(
 );
 //create route
 app.post(
-  "/listings",validateListing,
+  "/listings",
+  validateListing,
   wrapAsync(async (req, res, next) => {
     // let{title,description,image,price,country,location}=req.body;
     // if (!req.body.listing) {
@@ -93,7 +95,8 @@ app.get(
 );
 //update route
 app.put(
-  "/listings/:id",validateListing,
+  "/listings/:id",
+  validateListing,
   wrapAsync(async (req, res) => {
     let { id } = req.params;
     await Listing.findByIdAndUpdate(id, { ...req.body.listing });
@@ -111,6 +114,18 @@ app.delete(
     res.redirect("/listings");
   }),
 );
+//reviews route
+//post route
+app.post("/listings/:id/reviews", async (req, res) => {
+  let listing = await Listing.findById(req.params.id);
+  let newReview = new Review(req.body.review);
+  listing.reviews.push(newReview);
+  await newReview.save();
+  await listing.save();
+  console.log("new review saved");
+  res.send("new review saved");
+
+});
 
 app.get("/", (req, res) => {
   res.send("ROOT SERVER IS WORKING WELL!");
