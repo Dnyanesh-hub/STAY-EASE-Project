@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const review = require("./review");
+const review = require("./review.js");
 const Schema = mongoose.Schema; //storing mongoose.schema into schema variable so that we canuse schema variable instead of moongose.schema
 
 const listingSchema = new Schema({
@@ -35,8 +35,14 @@ const listingSchema = new Schema({
     {
       type: Schema.Types.ObjectId,
       ref: "Review",
-    }, 
+    },
   ],
+});
+//post mongoose middleware
+listingSchema.post("findOneAndDelete", async (listing) => {
+  if (listing) {
+    await review.deleteMany({ _id: { $in: listing.reviews } });
+  }
 });
 const Listing = mongoose.model("Listing", listingSchema); // creating model
 module.exports = Listing; //exporting model

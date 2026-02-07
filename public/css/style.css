@@ -51,7 +51,7 @@ body{
     align-items: space-evenly;
 }
 /* cards */
-.card{
+.listing-card{
     border: none !important;
     margin-bottom: 2rem;
 }

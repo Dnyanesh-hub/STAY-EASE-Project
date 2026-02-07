@@ -10,7 +10,7 @@ const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const wrapAsync = require("./utils/wrapAsync.js");
 const ExpressError = require("./utils/ExpressError.js");
-const { listingSchema } = require("./schema.js");
+const { listingSchema, reviewSchema } = require("./schema.js");
 const Review = require("./models/review.js");
 
 require("events").defaultMaxListeners = 50;
@@ -53,6 +53,16 @@ const validateListing = (req, res, next) => {
     next();
   }
 };
+// middleware to validate comment or review
+const validateReview = (req, res, next) => {
+  let { error } = reviewSchema.validate(req.body);
+  if (error) {
+    let errmsg = error.details.map((el) => el.message).join(",");
+    throw new ExpressError(400, msg);
+  } else {
+    next();
+  }
+};
 //new route
 app.get(
   "/listings/new",
@@ -65,7 +75,7 @@ app.get(
   "/listings/:id",
   wrapAsync(async (req, res) => {
     let { id } = req.params;
-    const listing = await Listing.findById(id);
+    const listing = await Listing.findById(id).populate("reviews");
     res.render("listings/show.ejs", { listing });
   }),
 );
@@ -116,16 +126,26 @@ app.delete(
 );
 //reviews route
 //post route
-app.post("/listings/:id/reviews", async (req, res) => {
-  let listing = await Listing.findById(req.params.id);
-  let newReview = new Review(req.body.review);
-  listing.reviews.push(newReview);
-  await newReview.save();
-  await listing.save();
-  console.log("new review saved");
-  res.send("new review saved");
-
-});
+app.post(
+  "/listings/:id/reviews",
+  validateReview,
+  wrapAsync(async (req, res) => {
+    let listing = await Listing.findById(req.params.id);
+    let newReview = new Review(req.body.review);
+    listing.reviews.push(newReview);
+    await newReview.save();
+    await listing.save();
+    res.redirect(`/listings/${listing._id}`);
+  }),
+);
+// delete review 
+app.delete("/listings/:id/reviews/:reviewid" , wrapAsync(async (req,res)=>{
+  let{id,reviewid}=req.params;
+  await Listing.findByIdAndUpdate(id,{$pull:{reviews:reviewid}})
+  let deletedReview= await Review.findByIdAndDelete(reviewid);
+  console.log(deletedReview);
+  res.redirect(`/listings/${id}`);
+}));
 
 app.get("/", (req, res) => {
   res.send("ROOT SERVER IS WORKING WELL!");
