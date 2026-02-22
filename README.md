@@ -21,7 +21,7 @@ reviews, with a focus on clean architecture and scalability.
 
 ## 🛠️ Tech Stack
 
-- **Frontend:** React, JavaScript, HTML, CSS  
+- **Frontend:** React, JavaScript, HTML, CSS ,ejs 
 - **Backend:** Node.js, Express.js  
 - **Database:** MongoDB (Mongoose)  
 - **API Style:** RESTful APIs  
