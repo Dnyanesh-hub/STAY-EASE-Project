@@ -5,7 +5,7 @@ built using the **MERN stack**.
 The platform allows users to explore properties, create listings, and share
 reviews, with a focus on clean architecture and scalability.
 
----
+
 
 ## 🚀 Features (Implemented)
 
@@ -17,7 +17,6 @@ reviews, with a focus on clean architecture and scalability.
 - 📦 MongoDB schema design for listings and reviews
 - and many more things yet to come some silent features.
 
----
 
 ## 🛠️ Tech Stack
 
@@ -27,8 +26,7 @@ reviews, with a focus on clean architecture and scalability.
 - **API Style:** RESTful APIs  
 - **Version Control:** Git & GitHub  
 
----
 
-## 🧩 System Architecture
+
 
 
