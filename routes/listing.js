@@ -16,7 +16,7 @@ const validateListing = (req, res, next) => {
   }
 };
 
-// index route
+// index route 
 router.get(
   "/",
   wrapAsync(async (req, res) => {
@@ -31,7 +31,7 @@ router.get(
     res.render("listings/createNew.ejs");
   }),
 );
-// show route
+// show  route
 router.get(
   "/:id",
   wrapAsync(async (req, res) => {
@@ -40,15 +40,15 @@ router.get(
     res.render("listings/show.ejs", { listing });
   }),
 );
-//create route
+//create  route
 router.post(
-  "/",
-  validateListing,
-  wrapAsync(async (req, res, next) => {
-    // let{title,description,image,price,country,location}=req.body;
+  "/",                                             // let{title,description,image,price,country,location}=req.body;
     // if (!req.body.listing) {
     //   throw new ExpressError(400, "Send valid data for listing");
     // }
+  validateListing,
+  wrapAsync(async (req, res, next) => {
+    
 
     const newListing = new Listing(req.body.listing);
     await newListing.save();
