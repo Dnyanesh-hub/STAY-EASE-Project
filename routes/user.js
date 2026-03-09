@@ -53,7 +53,8 @@ router.post(
   }),
   async (req, res) => {
     req.flash("success", "Welcome back to Stay-Ease !");
-    res.redirect(req.session.redirectUrl );
+    const redirectUrl=res.locals.redirectUrl || "/listings";
+    res.redirect(redirectUrl);
   }
 );
 
