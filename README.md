@@ -30,3 +30,49 @@ reviews, with a focus on clean architecture and scalability.
 
 
 
+
+```
+MAJOR PROJECT
+├─ app.js
+├─ init
+│  ├─ data.js
+│  └─ index.js
+├─ middleware.js
+├─ models
+│  ├─ listing.js
+│  ├─ review.js
+│  └─ user.js
+├─ package-lock.json
+├─ package.json
+├─ public
+│  ├─ css
+│  │  └─ style.css
+│  └─ js
+│     └─ script.js
+├─ README.md
+├─ routes
+│  ├─ listing.js
+│  ├─ review.js
+│  └─ user.js
+├─ schema.js
+├─ utils
+│  ├─ ExpressError.js
+│  └─ wrapAsync.js
+└─ views
+   ├─ includes
+   │  ├─ flash.ejs
+   │  ├─ footer.ejs
+   │  └─ navbar.ejs
+   ├─ layouts
+   │  └─ boilerplate.ejs
+   ├─ listings
+   │  ├─ createNew.ejs
+   │  ├─ edit.ejs
+   │  ├─ error.ejs
+   │  ├─ index.ejs
+   │  └─ show.ejs
+   └─ users
+      ├─ login.ejs
+      └─ signup.ejs
+
+```

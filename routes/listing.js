@@ -3,9 +3,13 @@ const router = express.Router();
 const wrapAsync = require("../utils/wrapAsync.js");
 
 const Listing = require("../models/listing.js");
-const { LoggedIN, isLoggedIN,isOwner,validateListing } = require("../middleware.js");
+const {
+  LoggedIN,
+  isLoggedIN,
+  isOwner,
+  validateListing,
+} = require("../middleware.js");
 //middleware for validate schema
-
 
 // index route
 router.get(
@@ -29,7 +33,12 @@ router.get(
   wrapAsync(async (req, res) => {
     let { id } = req.params;
     const listing = await Listing.findById(id)
-      .populate("reviews")
+      .populate({
+        path: "reviews",
+        populate: {
+          path:"author",
+        },
+      })
       .populate("owner");
     if (!listing) {
       req.flash("error", "Listing you requested for  does not exist");
@@ -48,7 +57,7 @@ router.post(
   validateListing,
   wrapAsync(async (req, res, next) => {
     const newListing = new Listing(req.body.listing);
-    newListing.owner=req.user._id;  
+    newListing.owner = req.user._id;
     await newListing.save();
     req.flash("success", "New Listing Created!");
     res.redirect("/listings");
@@ -76,7 +85,7 @@ router.put(
   validateListing,
   wrapAsync(async (req, res) => {
     let { id } = req.params;
-    
+
     await Listing.findByIdAndUpdate(id, { ...req.body.listing });
     req.flash("success", "listing Updated");
     res.redirect(`/listings/${id}`);
