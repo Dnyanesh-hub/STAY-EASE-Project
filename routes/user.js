@@ -4,38 +4,15 @@ const User = require("../models/user.js");
 const wrapAsync = require("../utils/wrapAsync");
 const passport = require("passport");
 const { saveRedirectUrl } = require("../middleware.js");
+const userController=require("../controllers/user.js");
 
 // signup page
-router.get("/signup", (req, res) => {
-  res.render("users/signup");
-});
+router.get("/signup", (userController.renderSignupForm));
 
 // signup logic
 router.post(
   "/signup",
-  wrapAsync(async (req, res, next) => {
-    try {
-      let { username, email, password } = req.body;
-
-      const newUser = new User({
-        email,
-        username,
-      });
-
-      const registeredUser = await User.register(newUser, password);
-
-      req.login(registeredUser, (err) => {
-        if (err) return next(err);
-
-        req.flash("success", "Welcome To Stay-Ease");
-        res.redirect("/listings");
-      });
-
-    } catch (e) {
-      req.flash("error", e.message);
-      res.redirect("/signup");
-    }
-  })
+  wrapAsync(userController.signup),
 );
 
 // login page
@@ -53,9 +30,9 @@ router.post(
   }),
   async (req, res) => {
     req.flash("success", "Welcome back to Stay-Ease !");
-    const redirectUrl=res.locals.redirectUrl || "/listings";
+    const redirectUrl = res.locals.redirectUrl || "/listings";
     res.redirect(redirectUrl);
-  }
+  },
 );
 
 // logout
