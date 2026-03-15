@@ -11,23 +11,29 @@ const {
 } = require("../middleware.js");
 const listingController = require("../controllers/listings.js");
 //middleware for validate schema
-
-// index route
-router.get("/", wrapAsync(listingController.index));
+//router.route for index and create route
+router
+  .route("/")
+  .get(wrapAsync(listingController.index))
+  .post(
+    isLoggedIN,
+    validateListing,
+    wrapAsync(listingController.createListing),
+  );
 //new route
 router.get("/new", isLoggedIN, wrapAsync(listingController.renderNewForm));
-// show  route
-router.get("/:id", wrapAsync(listingController.showListings));
-//create  route
-router.post(
-  "/", // let{title,description,image,price,country,location}=req.body;
-  // if (!req.body.listing) {
-  //   throw new ExpressError(400, "Send valid data for listing");
-  // }
-  isLoggedIN,
-  validateListing,
-  wrapAsync(listingController.createListing),
-);
+// router.route for update delete show route
+router
+  .route("/:id")
+  .get(wrapAsync(listingController.showListings))
+  .put(
+    isLoggedIN,
+    isOwner,
+    validateListing,
+    wrapAsync(listingController.updateListing),
+  )
+  .delete(isLoggedIN, isOwner, wrapAsync(listingController.destroyListing));
+
 // edit route
 router.get(
   "/:id/edit",
@@ -35,19 +41,5 @@ router.get(
   isOwner,
   wrapAsync(listingController.editListings),
 );
-//update route
-router.put(
-  "/:id",
-  isLoggedIN,
-  isOwner,
-  validateListing,
-  wrapAsync(listingController.updateListing),
-);
-//delete destroy route
-router.delete(
-  "/:id",
-  isLoggedIN,
-  isOwner,
-  wrapAsync(listingController.destroyListing),
-);
+
 module.exports = router;
