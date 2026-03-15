@@ -4,21 +4,16 @@ const User = require("../models/user.js");
 const wrapAsync = require("../utils/wrapAsync");
 const passport = require("passport");
 const { saveRedirectUrl } = require("../middleware.js");
-const userController=require("../controllers/user.js");
+const userController = require("../controllers/user.js");
 
 // signup page
-router.get("/signup", (userController.renderSignupForm));
+router.get("/signup", userController.renderSignupForm);
 
 // signup logic
-router.post(
-  "/signup",
-  wrapAsync(userController.signup),
-);
+router.post("/signup", wrapAsync(userController.signup));
 
 // login page
-router.get("/login", (req, res) => {
-  res.render("users/login");
-});
+router.get("/login", userController.renderLoginForm);
 
 // login logic
 router.post(
@@ -28,21 +23,11 @@ router.post(
     failureRedirect: "/login",
     failureFlash: true,
   }),
-  async (req, res) => {
-    req.flash("success", "Welcome back to Stay-Ease !");
-    const redirectUrl = res.locals.redirectUrl || "/listings";
-    res.redirect(redirectUrl);
-  },
+  userController.login
 );
 
 // logout
-router.get("/logout", (req, res, next) => {
-  req.logout((err) => {
-    if (err) return next(err);
+router.get("/logout",userController.logout);
 
-    req.flash("success", "Logged out successfully");
-    res.redirect("/listings");
-  });
-});
 
 module.exports = router;
