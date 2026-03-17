@@ -9,6 +9,7 @@
         method="POST"
         novalidate
         class="needs-validation"
+        enctype="multipart/form-data"
       >
         <div class="mb-3">
           <label for="title" class="form-label"> Title </label>
@@ -31,13 +32,11 @@
           ></textarea>
           <div class="invalid-feedback">Please enter the valid description</div>
         </div>
-
-        <div class="mb-3">
-          <label for="image" class="form-label">Image Link</label>
+         <div class="mb-3">
+          <label for="image" class="form-label"> Upload Listing Image </label>
           <input
-            type="text"
+            type="file"
             name="listing[image]"
-            placeholder="Enter image URL"
             class="form-control"
           />
         </div>

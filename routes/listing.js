@@ -10,16 +10,21 @@ const {
   validateListing,
 } = require("../middleware.js");
 const listingController = require("../controllers/listings.js");
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
 //middleware for validate schema
 //router.route for index and create route
 router
   .route("/")
   .get(wrapAsync(listingController.index))
-  .post(
-    isLoggedIN,
-    validateListing,
-    wrapAsync(listingController.createListing),
-  );
+  // .post(
+  //   isLoggedIN,
+  //   validateListing,
+  //   wrapAsync(listingController.createListing),
+  // );
+  .post(upload.single("listing[image]"), (req, res) => {
+    res.send(req.file);
+  });
 //new route
 router.get("/new", isLoggedIN, wrapAsync(listingController.renderNewForm));
 // router.route for update delete show route
