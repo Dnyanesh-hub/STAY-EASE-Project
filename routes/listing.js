@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const wrapAsync = require("../utils/wrapAsync.js");
-
 const Listing = require("../models/listing.js");
+
 const {
   LoggedIN,
   isLoggedIN,
@@ -11,20 +11,22 @@ const {
 } = require("../middleware.js");
 const listingController = require("../controllers/listings.js");
 const multer = require("multer");
-const upload = multer({ dest: "uploads/" });
+const {storage}=require("../cloudConfig.js"); 
+const upload = multer({ storage });
+
 //middleware for validate schema
 //router.route for index and create route
 router
   .route("/")
   .get(wrapAsync(listingController.index))
-  // .post(
-  //   isLoggedIN,
-  //   validateListing,
-  //   wrapAsync(listingController.createListing),
-  // );
-  .post(upload.single("listing[image]"), (req, res) => {
-    res.send(req.file);
-  });
+  .post(
+    isLoggedIN,
+    upload.single("listing[image]"),
+    validateListing,
+    
+    wrapAsync(listingController.createListing),
+  );
+
 //new route
 router.get("/new", isLoggedIN, wrapAsync(listingController.renderNewForm));
 // router.route for update delete show route
