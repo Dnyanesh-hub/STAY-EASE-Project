@@ -39,8 +39,11 @@ module.exports.editListings = async (req, res) => {
   const listing = await Listing.findById(id);
   if (!listing) {
     req.flash("error", "listing you requested for does not exist!");
+    res.redirect("/listings");
   }
-  res.render("listings/edit.ejs", { listing });
+  let originalImageUrl=listing.image.url;
+  originalImageUrl.replace("/upload","/upload/h_300,w_250");
+  res.render("listings/edit.ejs", { listing,originalImageUrl });
 };
 module.exports.updateListing = async (req, res) => {
   let { id } = req.params;
