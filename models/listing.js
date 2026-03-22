@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const review = require("./review.js");
+const { string } = require("joi");
 const Schema = mongoose.Schema; //storing mongoose.schema into schema variable so that we canuse schema variable instead of moongose.schema
 
 const listingSchema = new Schema({
@@ -34,6 +35,17 @@ const listingSchema = new Schema({
   owner: {
     type: Schema.Types.ObjectId,
     ref: "User",
+  },
+  geometry: {
+    type: {
+      type: string, // dont do {location:{type:string}}
+      enum: ["point"], // location .type must be point
+      required: true,
+    },
+    coordinates: {
+      type: [number],
+      required: true,
+    },
   },
 });
 //post mongoose middleware
