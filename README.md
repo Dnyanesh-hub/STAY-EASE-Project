@@ -13,6 +13,7 @@ reviews, with a focus on clean architecture and scalability.
 - 💬 Commenting system for user feedback
 - 🔐 Secure backend APIs with structured data models
 - 📦 MongoDB schema design for listings and reviews
+- added location 
 - and many more things yet to come some silent features.
 
 ## 🛠️ Tech Stack
