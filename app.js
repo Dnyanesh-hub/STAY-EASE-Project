@@ -53,9 +53,9 @@ const sessionOptions = {
   },
 };
 
-app.get("/", (req, res) => {
-  res.send("ROOT SERVER IS WORKING WELL!");
-});
+// app.get("/", (req, res) => {
+//   res.send("ROOT SERVER IS WORKING WELL!");
+// });
 app.use(session(sessionOptions));
 app.use(flash());
 app.use(passport.initialize());

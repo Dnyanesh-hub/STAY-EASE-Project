@@ -1,58 +1,72 @@
 const mongoose = require("mongoose");
 const review = require("./review.js");
-const { string } = require("joi");
-const Schema = mongoose.Schema; //storing mongoose.schema into schema variable so that we canuse schema variable instead of moongose.schema
+const Schema = mongoose.Schema;
 
+// Listing Schema
 const listingSchema = new Schema({
   title: {
     type: String,
     required: true,
   },
+
   description: {
     type: String,
   },
+
   image: {
-    //we want add default image for the place if user dont have any image of the place
-    //setting image filed value
     url: String,
     filename: String,
   },
+
   price: {
     type: Number,
   },
+
   location: {
     type: String,
   },
+
   country: {
     type: String,
   },
+
   reviews: [
     {
       type: Schema.Types.ObjectId,
       ref: "Review",
     },
   ],
+
   owner: {
     type: Schema.Types.ObjectId,
     ref: "User",
   },
+
+  // ✅ FIXED GEOJSON FIELD
   geometry: {
     type: {
-      type: string, // dont do {location:{type:string}}
-      enum: ["point"], // location .type must be point
+      type: String, // MUST be String (not string)
+      enum: ["Point"], // MUST be capital "Point"
       required: true,
     },
     coordinates: {
-      type: [number],
+      type: [Number], // [longitude, latitude]
       required: true,
     },
   },
 });
-//post mongoose middleware
+
+// ✅ Add geospatial index (important for maps)
+listingSchema.index({ geometry: "2dsphere" });
+
+// ✅ Post middleware to delete related reviews
 listingSchema.post("findOneAndDelete", async (listing) => {
   if (listing) {
     await review.deleteMany({ _id: { $in: listing.reviews } });
   }
 });
-const Listing = mongoose.model("Listing", listingSchema); // creating model
-module.exports = Listing; //exporting model
+
+// Create model
+const Listing = mongoose.model("Listing", listingSchema);
+
+module.exports = Listing;
