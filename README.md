@@ -13,6 +13,9 @@ reviews, with a focus on clean architecture and scalability.
 - 💬 Commenting system for user feedback
 - 🔐 Secure backend APIs with structured data models
 - 📦 MongoDB schema design for listings and reviews
+- Added user authentication system with login and logout features to manage user sessions securely.
+- Integrated GeoMaps to enable location-based features, allowing users to view and interact with geographic data seamlessly.
+  
 - and many more things yet to come some silent features.
 
 ## 🛠️ Tech Stack
@@ -23,51 +26,6 @@ reviews, with a focus on clean architecture and scalability.
 - **API Style:** RESTful APIs
 - **Version Control:** Git & GitHub
 
-```
-MAJOR PROJECT
-├─ app.js
-├─ init
-│  ├─ data.js
-│  └─ index.js
-├─ middleware.js
-├─ models
-│  ├─ listing.js
-│  ├─ review.js
-│  └─ user.js
-├─ package-lock.json
-├─ package.json
-├─ public
-│  ├─ css
-│  │  └─ style.css
-│  └─ js
-│     └─ script.js
-├─ README.md
-├─ routes
-│  ├─ listing.js
-│  ├─ review.js
-│  └─ user.js
-├─ schema.js
-├─ utils
-│  ├─ ExpressError.js
-│  └─ wrapAsync.js
-└─ views
-   ├─ includes
-   │  ├─ flash.ejs
-   │  ├─ footer.ejs
-   │  └─ navbar.ejs
-   ├─ layouts
-   │  └─ boilerplate.ejs
-   ├─ listings
-   │  ├─ createNew.ejs
-   │  ├─ edit.ejs
-   │  ├─ error.ejs
-   │  ├─ index.ejs
-   │  └─ show.ejs
-   └─ users
-      ├─ login.ejs
-      └─ signup.ejs
-
-```
 
 ```
 MAJOR PROJECT
