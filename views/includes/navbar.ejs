@@ -1,6 +1,42 @@
+<style>
+  .search-btn {
+    background-color: #fe424d;
+    color: #fff;
+    border-radius: 20px;
+    padding: 6px 16px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+  }
+
+  .search-btn:hover {
+    background-color: #fe424d;
+    color: #fff;
+  }
+
+  .search-btn i {
+    margin-right: 5px;
+  }
+
+  .form-control {
+    height: 38px;
+    border-radius: 20px;
+  }
+  .search-input{
+    border-radius: 25px;
+    padding: 0.5rem 3rem 0.5rem 3rem;
+  }
+</style>
+
 <nav class="navbar navbar-expand-md bg-light border-bottom sticky-top">
   <div class="container-fluid">
-    <a class="navbar-brand" href="/listings"><i class="fa-regular fa-compass"></i></a>
+
+    <!-- Logo -->
+    <a class="navbar-brand" href="/listings">
+      <i class="fa-regular fa-compass"></i>
+    </a>
+
+    <!-- Toggle Button -->
     <button
       class="navbar-toggler"
       type="button"
@@ -9,23 +45,45 @@
     >
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+
+      <!-- Left -->
       <div class="navbar-nav">
-        
         <a class="nav-link" href="/listings">Explore</a>
-        
       </div>
-      <div class="navbar-nav ms-auto">
-         <a class="nav-link" href="/listings/new">List. Host. Earn — Stay-Ease.</a> </a>
+
+      <!-- Center Search -->
+      <form class="d-flex align-items-center mx-auto" role="search">
+        <input 
+          class="form-control me-2 search-input" 
+          type="search" 
+          placeholder="Search destinations"
+          
+        />
+
+        <button class="btn search-btn" type="submit">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          Search
+        </button>
+      </form>
+
+      <!-- Right -->
+      <div class="navbar-nav">
+        <a class="nav-link" href="/listings/new">
+          List. Host. Earn — Stay-Ease.
+        </a>
+
         <% if(!currUser) { %>
-        <a class="nav-link" href="/signup"><b>SignUp</b></a>  
-        <!-- if user is not logged in then show an options of signup and login -->
-        <a class="nav-link" href="/login"><b>LogIn</b></a>
-        <%}%>
-         <% if(currUser) { %>
-        <a class="nav-link" href="/logout"><b>LogOut</b></a>
-        <%}%>  
+          <a class="nav-link" href="/signup"><b>SignUp</b></a>
+          <a class="nav-link" href="/login"><b>LogIn</b></a>
+        <% } %>
+
+        <% if(currUser) { %>
+          <a class="nav-link" href="/logout"><b>LogOut</b></a>
+        <% } %>
       </div>
+
     </div>
   </div>
 </nav>
