@@ -25,7 +25,8 @@ const axios = require("axios");
 
 require("events").defaultMaxListeners = 50;
 //connecting with data base
-const MONGO_URL = "mongodb://127.0.0.1:27017/stayease";
+// const MONGO_URL = "mongodb://127.0.0.1:27017/stayease";
+const dbUrl =  process.env.ATLASDB_URL;
 main()
   .then(() => {
     console.log("connected to database successfully");
@@ -34,7 +35,7 @@ main()
     console.log(err);
   });
 async function main() {
-  await mongoose.connect(MONGO_URL);
+  await mongoose.connect(dbUrl);
 }
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "/views"));
