@@ -1,103 +1,104 @@
 //first require express
-if(process.env.NODE_ENV != "production"){
- require("dotenv").config();
+const dns = require("dns");
+dns.setDefaultResultOrder("ipv4first");
+
+if (process.env.NODE_ENV != "production") {
+  require("dotenv").config();
 }
 
 const express = require("express");
 const app = express();
-let port = 8080;
-//second require mongoose
+const port = 8080;
+
 const mongoose = require("mongoose");
 const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const ExpressError = require("./utils/ExpressError.js");
-const Review = require("./models/review.js");
+
 const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
-const userRouter=require("./routes/user.js");
+const userRouter = require("./routes/user.js");
+
 const session = require("express-session");
 const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
-const axios = require("axios");
 
-require("events").defaultMaxListeners = 50;
-//connecting with data base
-// const MONGO_URL = "mongodb://127.0.0.1:27017/stayease";
-const dbUrl =  process.env.ATLASDB_URL;
-main()
-  .then(() => {
-    console.log("connected to database successfully");
-  })
-  .catch((err) => {
-    console.log(err);
-  });
-async function main() {
-  await mongoose.connect(dbUrl);
-}
+//  DB Connection
+const dbUrl = process.env.ATLASDB_URL;
+
+mongoose.connect(dbUrl)
+  .then(() => console.log(" Connected to DB"))
+  .catch(err => console.log(err));
+
+// 🔧 View Engine
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "/views"));
+app.engine("ejs", ejsMate);
+
+// 🔧 Middlewares
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
-app.engine("ejs", ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
+
+//  SESSION CONFIG (FIXED)
 const sessionOptions = {
   secret: "mysupersecretcode",
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false, // ✅ FIXED
   cookie: {
-    expires: Date.now() + 7 * 24 * 60 * 60 * 100, // cookie will expire after one week form date today
+    expires: Date.now() + 7 * 24 * 60 * 60 * 100, // ✅ FIXED
     maxAge: 7 * 24 * 60 * 60 * 1000,
     httpOnly: true,
+     secure: false, 
+    sameSite: "lax",
   },
 };
 
-// app.get("/", (req, res) => {
-//   res.send("ROOT SERVER IS WORKING WELL!");
-// });
 app.use(session(sessionOptions));
+
+
+app.use((req, res, next) => {
+  console.log("Session ID:", req.sessionID);
+  next();
+});
 app.use(flash());
+
+//  PASSPORT SETUP
 app.use(passport.initialize());
 app.use(passport.session());
+
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
+
+//  GLOBAL VARIABLES (VERY IMPORTANT)
 app.use((req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
-  res.locals.currUser=req.user;
+  res.locals.currUser = req.user;
   next();
 });
-//register route
-// app.get("/demouser", async (req, res) => {
-//   let fakeUser = new User({
-//     email: "student@gmail.com",
-//     username: "delta-student",
-//   });
-//   let registerdUser= await User.register(fakeUser,"helloworld");
-//   res.send(registerdUser);
-// });
 
+//  ROUTES
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
-app.use("/",userRouter);
+app.use("/", userRouter);
 
-//middleware to handle middleware
-
+//  404 Handler
 app.use((req, res, next) => {
-  next(new ExpressError(404, "Page Not Found! "));
+  next(new ExpressError(404, "Page Not Found!"));
 });
 
+//  Error Handler
 app.use((err, req, res, next) => {
-  // console.log(err);
-  let { status = 500, message = "something Went wrong" } = err;
-  res.status(status).render("./listings/error.ejs", { message });
-  // res.status(status).send(message);
+  let { status = 500, message = "Something went wrong" } = err;
+  res.status(status).render("listings/error.ejs", { message });
 });
 
-app.listen(port, (req, res) => {
-  console.log(`app is listening to the ${port} port`);
-  //start server on the port 8080
+//  SERVER
+app.listen(port, () => {
+  console.log(` App is listening on port ${port}`);
 });
